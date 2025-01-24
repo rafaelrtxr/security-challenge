@@ -94,7 +94,7 @@ public class UserController {
     }
 
     private String hashedPassword(String password) {
-        //FIXME: Weak encryption (https://cwe.mitre.org/data/definitions/327.html)
+        //FIXME: Weak hash (https://cwe.mitre.org/data/definitions/328.html)
         return Base64.getEncoder().encodeToString(md.digest(password.getBytes()));
     }
 

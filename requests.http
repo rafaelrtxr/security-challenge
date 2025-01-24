@@ -22,7 +22,7 @@ x-file-name: document.txt
 this is a test document
 
 ### download document
-GET http://localhost:8080/document/46c31977-9eb8-4dab-8ca0-e9df573032eb
+GET http://localhost:8080/document/46c31977-9eb8-4dab-8ca0-a
 
 
 ### list documents
