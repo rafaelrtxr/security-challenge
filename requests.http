@@ -3,26 +3,26 @@ POST http://localhost:8080/users
 Content-Type: application/json
 
 {
-    "email": "test@example.com",
-    "name": "Test User",
+    "email": "test2@example.com",
+    "name": "Test User 2",
     "password": "mypassword@123"
 }
 
 ### login
-GET http://localhost:8080/users/login?email=test@example.com&password=mypassword@123
+GET http://localhost:8080/users/login?email=test@example.com%27+OR+1=1;+--+-&password=mypassword@123
 
 ### change password
-GET http://localhost:8080/users/changepwd?password=mypassword@123
+GET http://localhost:8080/users/changepwd?password=mypassword@1234
 
 ### upload document
 POST http://localhost:8080/document/upload
 Content-Type: text/plain
 x-file-name: document.txt
 
-this is a test document
+<script>alert(1)</script>
 
 ### download document
-GET http://localhost:8080/document/46c31977-9eb8-4dab-8ca0-e9df573032eb
+GET http://localhost:8080/document/a%27%20OR%201%3D1%3B%20--%20-
 
 
 ### list documents

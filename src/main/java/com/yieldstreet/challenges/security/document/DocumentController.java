@@ -36,6 +36,7 @@ public class DocumentController {
         var userId = sessionHelper.authenticate(sessionId);
 
         var document = new Document(UUID.randomUUID(), userId, name, contents);
+        //FIXME: Arbitrary File Upload (https://cwe.mitre.org/data/definitions/434.html)
         documentDao.insert(document);
 
         return document.id();
@@ -49,14 +50,18 @@ public class DocumentController {
 
         var document = documentDao.findById(documentId);
 
+        //FIXME: Exposure of strack trace due to unhandled exception
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + document.name())
                 .body(document.contents());
     }
 
     @GetMapping("/documents")
-    public List<DocumentSummary> find() {
-        throw new UnsupportedOperationException("not implemented yet");
+    public ResponseEntity<List<DocumentSummary> > find(@CookieValue("session_id") String sessionId) {
+        var userId = sessionHelper.authenticate(sessionId);
+        List<DocumentSummary> documents = documentDao.findByUserId(userId.toString());
+        return ResponseEntity.ok(documents);
+        
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)

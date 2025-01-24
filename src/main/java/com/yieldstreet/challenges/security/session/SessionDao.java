@@ -14,10 +14,12 @@ public class SessionDao {
     }
 
     public void insert(String id, String userId) {
+        //FIXME: SQL Injection #4 (https://cwe.mitre.org/data/definitions/89)
         jdbc.execute("insert into session (id, user_id) values ('" + id + "', '" + userId + "')");
     }
 
     public String findSessionUserId(String sessionId) {
+        //FIXME: SQL Injection #5 (https://cwe.mitre.org/data/definitions/89)
         var userIds = jdbc.queryForList("select user_id from session where id = '" + sessionId + "'", String.class);
         return userIds.isEmpty() ? null : userIds.get(0);
     }

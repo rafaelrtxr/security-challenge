@@ -17,6 +17,7 @@ public class SessionHelper {
         var userId = dao.findSessionUserId(sessionId);
 
         if (userId == null) {
+            //FIXME: Exposure of stack trace in error message (https://cwe.mitre.org/data/definitions/209.html)
             throw new NotAuthenticatedException();
         }
 
