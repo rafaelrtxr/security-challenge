@@ -23,6 +23,7 @@ public class DocumentDao {
     }
 
     public void insert(Document document) {
+        //FIXME: SQL Injection #6
         jdbcTemplate.update("insert into document (id, user_id, name, contents) values ('"
                 + document.id() + "', '"
                 + document.userId() + "', '"
@@ -31,12 +32,20 @@ public class DocumentDao {
     }
 
     public Document findById(String id) {
+        //FIXME: SQL Injection #7
         return jdbcTemplate.queryForObject("select * from document where id = '" + id + "'", documentRowMapper);
     }
 
-    public List<DocumentSummary> findByUserId(String userId) {
-        return jdbcTemplate.query("select * from document where user_id = '" + userId + "'", documentSummaryRowMapper);
+    public List<DocumentSummary> findByUserId(String userId, int page, int pageSize) {
+        int offset = page * pageSize;
+        String query = "SELECT * FROM document WHERE user_id = ? LIMIT ? OFFSET ?";
+        return jdbcTemplate.query(query, documentSummaryRowMapper, userId, pageSize, offset);
     }
+
+    public int countByUserId(String userId){
+        String query = "SELECT COUNT(*) FROM document WHERE user_id = ?";
+        return jdbcTemplate.queryForObject(query, Integer.class, userId);    
+    } 
 
     private static class DocumentRowMapper implements RowMapper<Document> {
         @Override

@@ -14,6 +14,7 @@ public class AppConfig {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
         dataSource.setUrl("jdbc:mysql://mysql:3306/yieldstreet");
+        //FIXME: Hardcoded credentials (https://cwe.mitre.org/data/definitions/798.html)
         dataSource.setUsername("yieldstreet");
         dataSource.setPassword("yieldstreet");
 

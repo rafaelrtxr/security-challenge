@@ -53,17 +53,21 @@ public class UserController {
     @RequestMapping(method = RequestMethod.GET, value = "/users/login")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<UUID> login(@RequestParam("email") String email, @RequestParam("password") String password) {
+        //FIXME: Password on query string parameters (https://cwe.mitre.org/data/definitions/598)
         logger.info("Authenticating user {} with hashed password {}", email, password);
         var userId = userDao.authenticate(email, hashedPassword(password));
 
         if (userId == null) {
             logger.warn("failed to authenticate user {}", email);
+            //FIXME: Exposure of stack trace in error message (https://cwe.mitre.org/data/definitions/209.html)
             throw new AuthenticationFailedException();
         }
 
         UUID sessionId = UUID.randomUUID();
         sessionDao.insert(sessionId.toString(), userId.toString());
 
+        //FIXME: Sensitive cookie without HtppOnly flag (https://cwe.mitre.org/data/definitions/1004.html)
+        //FIXME: Sensitive cookie without Secure flag (https://cwe.mitre.org/data/definitions/614.html)
         var cookie = ResponseCookie.from("session_id", sessionId.toString())
                 .path("/")
                 .maxAge(60 * 60)
@@ -71,12 +75,14 @@ public class UserController {
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                //TODO: evaluate the exposure of a database primary key
                 .body(userId);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/users/changepwd")
     @ResponseStatus(HttpStatus.OK)
     public void changePassword(@CookieValue("session_id") String sessionId, @RequestParam String password) {
+        //FIXME: Insecure password change method, it should require the old password and a confirmation code
         var userId = sessionHelper.authenticate(sessionId);
         userDao.changePassword(userId.toString(), hashedPassword(password));
     }
@@ -88,6 +94,7 @@ public class UserController {
     }
 
     private String hashedPassword(String password) {
+        //FIXME: Weak hash (https://cwe.mitre.org/data/definitions/328.html)
         return Base64.getEncoder().encodeToString(md.digest(password.getBytes()));
     }
 
